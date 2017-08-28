@@ -1,0 +1,39 @@
+How to generate the Windows Installer
+-------------------------------------
+This post-processor requires python 2.7, vtk and PIL.
+In order to generate the Post-processor installer, download these files:
+* vtkpython-6.3.0-Windows-32bit.exe from http://www.vtk.org/download/
+* PIL-1.1.7.win32-py2.7.exe from http://www.pythonware.com/products/pil/
+(PIL has been abandoned, so in the future it might be better to move to Pillow)
+* nsis-2.49-setup.exe from http://nsis.sourceforge.net/Download
+
+vtkpython-6.3.0-Windows-32bit.exe is a whole python environment with vtk installed in it.
+PIL-1.1.7.win32-py2.7.exe is the installer for PIL. We are not interested in installing it on the vtk python. We just need to copy the library files.
+nsis-2.49-setup.exe Is the Nullsoft Scriptable Install System, an open source installer generator. It is responsible for generating the installer binary.
+
+Once downloaded, follow these steps:
+* Install vtkpython. The installation directory will be referenced as $VTKINSTALLDIR.
+* For some reason vtkpython comes with vtk dlls from version 6.1, 6.2 and 6.3. Delete *-6.1.dll and *-6.2.dll from the $VTKINSTALLDIR.
+* Run in $VTKINSTALLDIR the following shell command:
+$ python -m compileall -q python
+This will precompile all py files inside the python directory (to speed up the loading process).
+* Decompress PIL as if it was a zip file in a temporary folder ($PILTMP).
+* Open PIL dir and move $PILTMP/PLATLIB/PIL inside $VTKINSTALLDIR/lib.
+* Copy the vtk installation directory $VTKINSTALLDIR to the working directory where and rename it to "python".
+
+Ubuntu Installation
+-------------------
+Run the following script:
+$ sudo apt-get install python2.7 vtk6 python-vtk6 python-pil
+Troubleshooting
+***************
+If it throws:
+> ImportError: No module named vtkCommonCorePython
+In that case, you might need to fix some broken links. To fix them, run the following lines:
+$ cd /usr/lib/x86_64-linux-gnu
+$ for a in libvtk*-6.0.so.6.0;do sudo ln -s "$a" ${a/-6.0.so.6.0/-6.0.so};done
+This has been reported to happen in Kubuntu 14.
+
+KNOWN BUGS
+----------
+* Tkinter doesn't work in our Windows python installation. Dialogs won't be displayed.

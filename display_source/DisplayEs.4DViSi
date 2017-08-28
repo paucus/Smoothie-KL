@@ -1,0 +1,1569 @@
+﻿Version     0.0
+Platform    uLCD-32PTU-LR
+PlatRes     240x320
+Depends
+end
+Options
+    Visualizer
+    Speed                        0
+    Checksum                     No
+    ResponseSize                 0
+    Multidrop                    No
+    Destination                  0
+    MainForm                     0
+    SndBuf                       0
+    ButtonDisable                No
+    SignedDigits                 No
+end
+Form
+    Name                         Home
+    Alias                        Home
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bPrepare
+    Alias                        bPrepare
+    Height                       159
+    Images                       home_02.jpg\nhometoggle_02.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPrint
+    Alias                        bPrint
+    Height                       159
+    Images                       home_03.jpg\nhometoggle_03.jpg\nhome_03_disabled.jpg
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bInformation
+    Alias                        bInformation
+    Height                       40
+    Images                       home_06_button.png\nhome_06_button_toggle.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualControl
+    Alias                        bManualControl
+    Height                       40
+    Images                       home_04_button.png\nhome_04_button_toggle.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         Print
+    Alias                        Print
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bBack
+    Alias                        bBack
+    Height                       40
+    Images                       Pantallas_08.png\nPantallas-Toggle_08.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        159
+    OnChanged                    ''
+end
+UserButton
+    Name                         bEnterFolder
+    Alias                        bEnterFolder
+    Height                       40
+    Images                       abrir_carpeta.png\nabrir_carpeta_toggle.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPreviousFile
+    Alias                        bPreviousFile
+    Height                       172
+    Images                       Seleccionar-Modelo_02.png\nSeleccionar-Modelo-toggle_02.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         bNextFile
+    Alias                        bNextFile
+    Height                       172
+    Images                       Seleccionar-Modelo_03.png\nSeleccionar-Modelo-toggle_03.png
+    Left                         284
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         bDoPrint
+    Alias                        bDoPrint
+    Height                       40
+    Images                       Seleccionar-Modelo_06.png\nSeleccionar-Modelo-toggle_06.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bFolderPreview
+    Alias                        bFolderPreview
+    Height                       90
+    Images                       folder_thumb.png
+    Left                         115
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          82
+    Width                        90
+    OnChanged                    ''
+end
+Image
+    Name                         bGenericFilePreview
+    Alias                        bGenericFilePreview
+    Height                       90
+    Image                        generic_file_preview.png
+    Left                         115
+    Source.Height                90
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 90
+    Top                          82
+    Width                        90
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Image
+    Name                         bLoadingPreview
+    Alias                        bLoadingPreview
+    Height                       61
+    Image                        gears_loading.png
+    Left                         116
+    Source.Height                61
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 90
+    Top                          97
+    Width                        90
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bModelInfo
+    Alias                        bModelInfo
+    Height                       40
+    Images                       Seleccionar-Modelo_07.png\nSeleccionar-Modelo-toggle_07.png
+    Left                         235
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          132
+    Width                        36
+    OnChanged                    ''
+end
+Form
+    Name                         Printing
+    Alias                        Printing
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bCancel
+    Alias                        bCancel
+    Height                       40
+    Images                       imprimiendo_02.png\nimprimiendo-toggle_02.png\nimprimiendo-disabled_02.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustments
+    Alias                        bAdjustments
+    Height                       40
+    Images                       imprimiendo_03.png\nimprimiendo-toggle_03.png
+    Left                         108
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        106
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPause
+    Alias                        bPause
+    Height                       40
+    Images                       imprimiendo_04.png\nimprimiendo-toggle_04.png\nimprimiendo-disabled_04.png
+    Left                         215
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        107
+    OnChanged                    ''
+end
+Form
+    Name                         Prepare
+    Alias                        Prepare
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bPLA
+    Alias                        bPLA
+    Height                       60
+    Images                       Pantallas_02.png\nPantallas-Toggle_02.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bABS
+    Alias                        bABS
+    Height                       60
+    Images                       Pantallas_03.png\nPantallas-Toggle_03.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bNylon
+    Alias                        bNylon
+    Height                       60
+    Images                       Pantallas_04.png\nPantallas-Toggle_04.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          60
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bFlexible
+    Alias                        bFlexible
+    Height                       60
+    Images                       Pantallas_05.png\nPantallas-Toggle_05.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          60
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bBackPrepare
+    Alias                        bBackPrepare
+    Height                       40
+    Images                       Preparar2_07.png\nPreparar2toggle_07.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bCooldown
+    Alias                        bCooldown
+    Height                       40
+    Images                       Preparar2_08.png\nPreparar2toggle_08.png
+    Left                         108
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSwitchFilament
+    Alias                        bSwitchFilament
+    Height                       40
+    Images                       Preparar2_09.png\nPreparar2toggle_09.png
+    Left                         216
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        106
+    OnChanged                    ''
+end
+UserButton
+    Name                         bETC_EN
+    Alias                        bETC_EN
+    Height                       50
+    Images                       Pantallas_06_en.png\nPantallas-Toggle_06_en.png
+    Left                         75
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      Yes
+    Top                          120
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bETC_SP
+    Alias                        bETC_SP
+    Height                       50
+    Images                       Pantallas_06.png\nPantallas-Toggle_06.png
+    Left                         75
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      Yes
+    Top                          120
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bETC_PO
+    Alias                        bETC_PO
+    Height                       50
+    Images                       Pantallas_06_po.png\nPantallas-Toggle_06_po.png
+    Left                         75
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      Yes
+    Top                          120
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         ChangeFilament
+    Alias                        ChangeFilament
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bFilamentExtrude
+    Alias                        bFilamentExtrude
+    Height                       49
+    Images                       Confirmacion-cancelacion-de-impresion_02.png\nConfirmacion-cancelacion-de-impresion-toggle_02.png
+    Left                         2
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          124
+    Width                        161
+    OnChanged                    ''
+end
+UserButton
+    Name                         bFilamentRetract
+    Alias                        bFilamentRetract
+    Height                       49
+    Images                       Confirmacion-cancelacion-de-impresion_03.png\nConfirmacion-cancelacion-de-impresion-toggle_03.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          65
+    Width                        159
+    OnChanged                    ''
+end
+UserButton
+    Name                         bDoneChange
+    Alias                        bDoneChange
+    Height                       40
+    Images                       Confirmacion-cancelacion-de-impresion_04.png\nConfirmacion-cancelacion-de-impresion-toggle_04.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        320
+    OnChanged                    ''
+end
+UserButton
+    Name                         bChangeFilamentZUp
+    Alias                        bChangeFilamentZUp
+    Height                       49
+    Images                       Confirmacion-cancelacion-de-impresion_03.png\nConfirmacion-cancelacion-de-impresion-toggle_03.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          65
+    Width                        159
+    OnChanged                    ''
+end
+UserButton
+    Name                         bChangeFilamentZDown
+    Alias                        bChangeFilamentZDown
+    Height                       49
+    Images                       Confirmacion-cancelacion-de-impresion_02.png\nConfirmacion-cancelacion-de-impresion-toggle_02.png
+    Left                         162
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          124
+    Width                        161
+    OnChanged                    ''
+end
+Form
+    Name                         CancelConfirmation
+    Alias                        CancelConfirmation
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Image
+    Name                         CancelImage
+    Alias                        CancelImage
+    Height                       67
+    Image                        confirmacion-de-cancel_03.png
+    Left                         243
+    Source.Height                67
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 67
+    Top                          10
+    Width                        67
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bDoCancel
+    Alias                        bDoCancel
+    Height                       40
+    Images                       confirmacion-de-cancel_07.png\nconfirmacion-de-cancel-toggle_07.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bDoNotCancel
+    Alias                        bDoNotCancel
+    Height                       40
+    Images                       confirmacion-de-cancel_06.png\nconfirmacion-de-cancel-toggle_06.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         Information
+    Alias                        Information
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bBackInformation
+    Alias                        bBackInformation
+    Height                       40
+    Images                       Manual_08.jpg\nManualToggle_08.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        165
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSelectLanguage
+    Alias                        bSelectLanguage
+    Height                       40
+    Images                       Info_03.png\nInfo-toggle_03.png
+    Left                         166
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Image
+    Name                         KikaiLogo
+    Alias                        KikaiLogo
+    Height                       82
+    Image                        'Kikai Logo.png'
+    Left                         95
+    Source.Height                82
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 130
+    Top                          5
+    Width                        130
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         Language
+    Alias                        Language
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bSpanish
+    Alias                        bSpanish
+    Height                       65
+    Images                       Idiomas_03.png\nIdiomas-touch_03.png\nIdiomas-on_03.png
+    Left                         65
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPortuguese
+    Alias                        bPortuguese
+    Height                       65
+    Images                       Idiomas_05.png\nIdiomas-touch_05.png\nIdiomas-on_05.png
+    Left                         135
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bEnglish
+    Alias                        bEnglish
+    Height                       65
+    Images                       Idiomas_07.png\nIdiomas-touch_07.png\nIdiomas-on_07.png
+    Left                         205
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bBackLanguage
+    Alias                        bBackLanguage
+    Height                       40
+    Images                       Idiomas_12.png\nIdiomas-touch_12.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        320
+    OnChanged                    ''
+end
+Form
+    Name                         PrepareCustomTemp
+    Alias                        PrepareCustomTemp
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bHeaterTempPlus
+    Alias                        bHeaterTempPlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          30
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bHeaterTempMinus
+    Alias                        bHeaterTempMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          30
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bBedTempMinus
+    Alias                        bBedTempMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          85
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bBedTempPlus
+    Alias                        bBedTempPlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          85
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPrepareCustomAccept
+    Alias                        bPrepareCustomAccept
+    Height                       40
+    Images                       Confirmacion-cancelacion-de-impresion_04.png\nConfirmacion-cancelacion-de-impresion-toggle_04.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        320
+    OnChanged                    ''
+end
+Form
+    Name                         Adjustments
+    Alias                        Adjustments
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bAdjustmentsExtruderMinus
+    Alias                        bAdjustmentsExtruderMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          -1
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsExtruderPlus
+    Alias                        bAdjustmentsExtruderPlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          -1
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsBedTempMinus
+    Alias                        bAdjustmentsBedTempMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          41
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsBedTempPlus
+    Alias                        bAdjustmentsBedTempPlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          41
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsPrintSpeedMinus
+    Alias                        bAdjustmentsPrintSpeedMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          80
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsPrintSpeedPlus
+    Alias                        bAdjustmentsPrintSpeedPlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          80
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsBlowerRateMinus
+    Alias                        bAdjustmentsBlowerRateMinus
+    Height                       50
+    Images                       minus.png\nminus_toggle.png
+    Left                         170
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          120
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsBlowerRatePlus
+    Alias                        bAdjustmentsBlowerRatePlus
+    Height                       50
+    Images                       plus.png\nplus_toggle.png
+    Left                         270
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          120
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsBack
+    Alias                        bAdjustmentsBack
+    Height                       40
+    Images                       Avanzado_07.png\nAvanzado-toggle_07.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bAdjustmentsToggleFan
+    Alias                        bAdjustmentsToggleFan
+    Height                       40
+    Images                       Avanzado_08.png\nAvanzado-toggle_08.png\nAvanzado-toggle2_06.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         Pause
+    Alias                        Pause
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Image
+    Name                         PauseImage
+    Alias                        PauseImage
+    Height                       76
+    Image                        Pausa-toggle_03.png
+    Left                         239
+    Source.Height                76
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 76
+    Top                          5
+    Width                        76
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bPauseBack
+    Alias                        bPauseBack
+    Height                       40
+    Images                       Pausa_06.png\nPausa-toggle_06.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPauseSwitchFilament
+    Alias                        bPauseSwitchFilament
+    Height                       40
+    Images                       Pausa_07.png\nPausa-toggle_07.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         ManualControl
+    Alias                        ManualControl
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bManualRetract
+    Alias                        bManualRetract
+    Height                       78
+    Images                       Manual_02.jpg\nManualToggle_02.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          20
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualExtrude
+    Alias                        bManualExtrude
+    Height                       78
+    Images                       Manual_05.jpg\nManualToggle_05.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          96
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualZUp
+    Alias                        bManualZUp
+    Height                       78
+    Images                       Manual_02.jpg\nManualToggle_02.jpg\nManualDisabled_02.jpg
+    Left                         213
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          20
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualZDown
+    Alias                        bManualZDown
+    Height                       78
+    Images                       Manual_05.jpg\nManualToggle_05.jpg\nManualDisabled_05.jpg
+    Left                         213
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          96
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualZHome
+    Alias                        bManualZHome
+    Height                       78
+    Images                       Manual_03.jpg\nManualToggle_03.jpg
+    Left                         108
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          20
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualXYHome
+    Alias                        bManualXYHome
+    Height                       78
+    Images                       Manual_06.jpg\nManualToggle_06.jpg
+    Left                         108
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          96
+    Width                        107
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualBack
+    Alias                        bManualBack
+    Height                       40
+    Images                       Manual_08.jpg\nManualToggle_08.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        165
+    OnChanged                    ''
+end
+UserButton
+    Name                         bManualToggleTemperature
+    Alias                        bManualToggleTemperature
+    Height                       40
+    Images                       Manual2_09.jpg\nManualToggle_09.jpg\nManual_09.jpg\nManualToggle2_09.jpg
+    Left                         166
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        155
+    OnChanged                    ''
+end
+Form
+    Name                         CalibrationScreen
+    Alias                        CalibrationScreen
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bPassword1
+    Alias                        bPassword1
+    Height                       50
+    Images                       'Keypad 1.png\nKeypad 1_t.png'
+    Left                         80
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          15
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword2
+    Alias                        bPassword2
+    Height                       50
+    Images                       'Keypad 2.png\nKeypad 2_t.png'
+    Left                         135
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          15
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword3
+    Alias                        bPassword3
+    Height                       50
+    Images                       'Keypad 3.png\nKeypad 3_t.png'
+    Left                         190
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          15
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword4
+    Alias                        bPassword4
+    Height                       50
+    Images                       'Keypad 4.png\nKeypad 4_t.png'
+    Left                         80
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword5
+    Alias                        bPassword5
+    Height                       50
+    Images                       'Keypad 5.png\nKeypad 5_t.png'
+    Left                         135
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword6
+    Alias                        bPassword6
+    Height                       50
+    Images                       'Keypad 6.png\nKeypad 6_t.png'
+    Left                         190
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword7
+    Alias                        bPassword7
+    Height                       50
+    Images                       'Keypad 7.png\nKeypad 7_t.png'
+    Left                         80
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          125
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword8
+    Alias                        bPassword8
+    Height                       50
+    Images                       'Keypad 8.png\nKeypad 8_t.png'
+    Left                         135
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          125
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword9
+    Alias                        bPassword9
+    Height                       50
+    Images                       'Keypad 9.png\nKeypad 9_t.png'
+    Left                         190
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          125
+    Width                        50
+    OnChanged                    ''
+end
+UserButton
+    Name                         bPassword0
+    Alias                        bPassword0
+    Height                       50
+    Images                       'Keypad 0.png\nKeypad 0_t.png'
+    Left                         135
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          180
+    Width                        50
+    OnChanged                    ''
+end
+Form
+    Name                         CalibrationScreen2
+    Alias                        CalibrationScreen2
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bCalibrationUp
+    Alias                        bCalibrationUp
+    Height                       52
+    Images                       Up.png\nUp_t.png
+    Left                         134
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          70
+    Width                        52
+    OnChanged                    ''
+end
+UserButton
+    Name                         bCalibrationDown
+    Alias                        bCalibrationDown
+    Height                       52
+    Images                       Down.png\nDown_t.png
+    Left                         134
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          127
+    Width                        52
+    OnChanged                    ''
+end
+UserButton
+    Name                         bCalibrationNext
+    Alias                        bCalibrationNext
+    Height                       40
+    Images                       Info_02.png\nInfo-toggle_02.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         bCalibrationDone
+    Alias                        bCalibrationDone
+    Height                       40
+    Images                       confirmacion-de-cancel_07.png\nconfirmacion-de-cancel-toggle_07.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+Form
+    Name                         PIDTest
+    Alias                        PIDTest
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         pidbCancelBig
+    Alias                        pidbCancelBig
+    Height                       40
+    Images                       Confirmacion-cancelacion-de-impresion_04.png\nConfirmacion-cancelacion-de-impresion-toggle_04.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          200
+    Width                        320
+    OnChanged                    ''
+end
+UserButton
+    Name                         pidbCancelSmall
+    Alias                        pidbCancelSmall
+    Height                       40
+    Images                       confirmacion-de-cancel_06.png\nconfirmacion-de-cancel-toggle_06.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          200
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         pidbAccept
+    Alias                        pidbAccept
+    Height                       40
+    Images                       confirmacion-de-cancel_07.png\nconfirmacion-de-cancel-toggle_07.png
+    Left                         160
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          200
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         pidbExtruder
+    Alias                        pidbExtruder
+    Height                       138
+    Images                       Boton_Extrusor.png\nBoton_Extrusor_t.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          36
+    Width                        157
+    OnChanged                    ''
+end
+UserButton
+    Name                         pidbHeatbed
+    Alias                        pidbHeatbed
+    Height                       138
+    Images                       Boton_Heatbed.png\nBoton_Heatbed_t.png
+    Left                         164
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          36
+    Width                        157
+    OnChanged                    ''
+end
+Form
+    Name                         Settings
+    Alias                        Settings
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         bSettingsPrevious
+    Alias                        bSettingsPrevious
+    Height                       172
+    Images                       Seleccionar-Modelo_02.png\nSeleccionar-Modelo-toggle_02.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSettingsNext
+    Alias                        bSettingsNext
+    Height                       172
+    Images                       Seleccionar-Modelo_03.png\nSeleccionar-Modelo-toggle_03.png
+    Left                         284
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSettingsBack
+    Alias                        bSettingsBack
+    Height                       40
+    Images                       Idiomas_12.png\nIdiomas-touch_12.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        320
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSettingsOpt1
+    Alias                        bSettingsOpt1
+    Height                       39
+    Images                       Boton_transp.png\nBoton_transp_toogle.png
+    Left                         36
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          55
+    Width                        248
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSettingsOpt2
+    Alias                        bSettingsOpt2
+    Height                       39
+    Images                       Boton_transp.png\nBoton_transp_toogle.png
+    Left                         36
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          94
+    Width                        248
+    OnChanged                    ''
+end
+UserButton
+    Name                         bSettingsOpt3
+    Alias                        bSettingsOpt3
+    Height                       39
+    Images                       Boton_transp.png\nBoton_transp_toogle.png
+    Left                         36
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          133
+    Width                        248
+    OnChanged                    ''
+end
+Form
+    Name                         MoreInfo
+    Alias                        MoreInfo
+    Bgtype                       Color
+    Color                        WHITE
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+UserButton
+    Name                         miPrevious
+    Alias                        miPrevious
+    Height                       172
+    Images                       Seleccionar-Modelo_02.png\nSeleccionar-Modelo-toggle_02.png
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         miNext
+    Alias                        miNext
+    Height                       172
+    Images                       Seleccionar-Modelo_03.png\nSeleccionar-Modelo-toggle_03.png
+    Left                         284
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          0
+    Width                        36
+    OnChanged                    ''
+end
+UserButton
+    Name                         miBack
+    Alias                        miBack
+    Height                       40
+    Images                       Manual_08.jpg\nManualToggle_08.jpg
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        160
+    OnChanged                    ''
+end
+UserButton
+    Name                         miPreview
+    Alias                        miPreview
+    Height                       40
+    Images                       Lupa.png\nLupa-toggle.png
+    Left                         161
+    Matrix                       -1
+    Momentary                    Yes
+    Stretch                      No
+    Top                          199
+    Width                        159
+    OnChanged                    ''
+end

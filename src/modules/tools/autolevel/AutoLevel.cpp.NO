@@ -1,0 +1,515 @@
+/*
+ * AutoLevel.cpp
+ *
+ *  Created on: Apr 30, 2014
+ *      Author: abialet
+ */
+
+
+#include "libs/Module.h"
+#include "libs/Kernel.h"
+#include "libs/StreamOutputPool.h"
+#include <math.h>
+#include "libs/Config.h"
+#include "libs/ConfigValue.h"
+#include "Robot.h"
+#include "checksumm.h"
+#include "utils.h"
+#include "modules/communication/utils/Gcode.h"
+#include "modules/robot/Conveyor.h"
+#include "AutoLevel.h"
+#include "libs/nuts_bolts.h"
+#include "libs/Pin.h"
+#include "libs/StepperMotor.h"
+#include "wait_api.h" // mbed.h lib
+#include "vector_3.h"
+#include "Stepper.h"
+#include "modules/robot/arm_solutions/BaseSolution.h"
+#include "qr_solve.h"
+#include "AutoLevelStatus.h"
+#include "PublicDataRequest.h"
+
+#define autolevel_module_enable_checksum         CHECKSUM("autolevel_enable")
+#define autolevel_fast_move_z_checksum           CHECKSUM("autolevel_fast_move_z")
+#define autolevel_slow_move_z_checksum           CHECKSUM("autolevel_slow_move_z")
+#define autolevel_fast_move_xy_checksum          CHECKSUM("autolevel_fast_move_xy")
+#define autolevel_raise_z_on_check_checksum      CHECKSUM("autolevel_raise_z_on_check")
+
+#define alpha_steps_per_mm_checksum      CHECKSUM("alpha_steps_per_mm")
+#define beta_steps_per_mm_checksum       CHECKSUM("beta_steps_per_mm")
+#define gamma_steps_per_mm_checksum      CHECKSUM("gamma_steps_per_mm")
+
+#define gamma_min_endstop_checksum       CHECKSUM("gamma_min_endstop")
+
+#define autolevel_positions_to_probe_0x_checksumm		CHECKSUM("autolevel_positions_to_probe_0x")
+#define autolevel_positions_to_probe_0y_checksumm		CHECKSUM("autolevel_positions_to_probe_0y")
+#define autolevel_positions_to_probe_1x_checksumm		CHECKSUM("autolevel_positions_to_probe_1x")
+#define autolevel_positions_to_probe_1y_checksumm		CHECKSUM("autolevel_positions_to_probe_1y")
+#define autolevel_positions_to_probe_2x_checksumm		CHECKSUM("autolevel_positions_to_probe_2x")
+#define autolevel_positions_to_probe_2y_checksumm		CHECKSUM("autolevel_positions_to_probe_2y")
+#define autolevel_positions_to_probe_3x_checksumm		CHECKSUM("autolevel_positions_to_probe_3x")
+#define autolevel_positions_to_probe_3y_checksumm		CHECKSUM("autolevel_positions_to_probe_3y")
+
+#define number_of_positions_to_probe 				4
+uint16_t autolevel_positions_to_probe_checksumms[number_of_positions_to_probe][2] = {\
+{autolevel_positions_to_probe_0x_checksumm,autolevel_positions_to_probe_0y_checksumm},\
+{autolevel_positions_to_probe_1x_checksumm,autolevel_positions_to_probe_1y_checksumm},\
+{autolevel_positions_to_probe_2x_checksumm,autolevel_positions_to_probe_2y_checksumm},\
+{autolevel_positions_to_probe_3x_checksumm,autolevel_positions_to_probe_3y_checksumm}\
+};
+
+// BEGIN MODIF safe_homing and correct_nozzle_distance_to_bed
+#define alpha_homing_direction_checksum		CHECKSUM("alpha_homing_direction")
+#define beta_homing_direction_checksum		CHECKSUM("beta_homing_direction")
+#define gamma_homing_direction_checksum		CHECKSUM("gamma_homing_direction")
+#define home_to_max_checksum			CHECKSUM("home_to_max")
+#define home_to_min_checksum			CHECKSUM("home_to_min")
+// END MODIF safe_homing and correct_nozzle_distance_to_bed
+
+AutoLevel::AutoLevel(Endstops* e)
+{
+	this->endstops = e;
+	this->autolevel_progress = 0;
+}
+
+void AutoLevel::on_module_loaded()
+{
+	// Do not do anything if not enabled
+	if ( THEKERNEL->config->value( autolevel_module_enable_checksum )->by_default(false)->as_bool() == false ) {
+		THEKERNEL->streams->printf("Auto leveling not enabled.\r\n");
+
+		return;
+	}
+
+	//register_for_event(ON_CONFIG_RELOAD);
+	this->register_for_event(ON_GCODE_RECEIVED);
+	this->register_for_event(ON_GET_PUBLIC_DATA);
+
+	// Take StepperMotor objects from Robot and keep them here
+	this->steppers[X_AXIS] = THEKERNEL->robot->alpha_stepper_motor;
+	this->steppers[Y_AXIS] = THEKERNEL->robot->beta_stepper_motor;
+	this->steppers[Z_AXIS] = THEKERNEL->robot->gamma_stepper_motor;
+
+	this->steps_per_mm[X_AXIS]           =  THEKERNEL->config->value(alpha_steps_per_mm_checksum         )->by_default(  80.0F)->as_number();
+	this->steps_per_mm[Y_AXIS]           =  THEKERNEL->config->value(beta_steps_per_mm_checksum          )->by_default(  80.0F)->as_number();
+	this->steps_per_mm[Z_AXIS]           =  THEKERNEL->config->value(gamma_steps_per_mm_checksum         )->by_default(2560.0F)->as_number();
+
+	fast_move_z =  THEKERNEL->config->value(autolevel_fast_move_z_checksum)->by_default(9000)->as_number();
+	slow_move_z =  THEKERNEL->config->value(autolevel_slow_move_z_checksum)->by_default(2000)->as_number();
+	fast_move_xy =  THEKERNEL->config->value(autolevel_fast_move_xy_checksum)->by_default(9000)->as_number();
+
+	raise_z =  THEKERNEL->config->value(autolevel_raise_z_on_check_checksum)->by_default(5)->as_number();
+
+	// Transform from carthesian coordinates to the arm solution coordinates.
+	for (int i = 0; i < number_of_positions_to_probe; i++) {
+		positions_to_probe[i][X_AXIS] = THEKERNEL->config->value(autolevel_positions_to_probe_checksumms[i][0])->by_default(default_positions_to_probe[i][X_AXIS])->as_number();
+		positions_to_probe[i][Y_AXIS] = THEKERNEL->config->value(autolevel_positions_to_probe_checksumms[i][1])->by_default(default_positions_to_probe[i][Y_AXIS])->as_number();
+	}
+
+	update_area_to_probe_g30();
+
+	// Settings
+	this->on_config_reload(this);
+
+}
+
+void AutoLevel::on_config_reload(void *argument)
+{
+}
+
+void AutoLevel::on_gcode_received(void *argument)
+{
+	Gcode *gcode = static_cast<Gcode *>(argument);
+
+	if ( gcode->has_g) {
+		// if G29 for autolevel is changed, remember to update places where it's used (see void Endstops::on_gcode_received(void *argument))
+		if ( gcode->g == 29 ) {
+			gcode->mark_as_taken();
+
+			// Enable the motors
+			THEKERNEL->stepper->turn_enable_pins_on();
+
+			// G29 is received, we have work to do
+
+			// notify beginning of autolevel
+			this->autolevel_progress = 0;	// reset progress value
+			autolevel_status_change_t status;
+			status.event = al_begin;
+			THEKERNEL->call_event(ON_AUTOLEVEL_STATUS_CHANGE, &status);
+
+			// Clear transformation matrix
+			THEKERNEL->robot->transformation.set_to_identity();
+
+			/* To do the leveling, first we need to home all axes... */
+			bool homing[] = {true, true, true};
+			endstops->do_safe_homing_and_leave_zprobe_active(homing, gcode->stream);
+			this->autolevel_progress++;
+
+			/* To create the differences, we need the z value for each of the 4 points.
+			 * The X,Y positions of the probing points are absolute, we need to move the steppers
+			 * relative to where we are...
+			 *
+			 * All of these movements are meant to be for a cartesian robot, they *NEED* to be changed
+			 * to support a corexy robot. */
+
+			//after we measure the first time, we need to save the number of steps to move up to compensate for what we went down...
+			int z_steps = raise_z * steps_per_mm[GAMMA_STEPPER];
+
+			vector_3 vectors[number_of_positions_to_probe];
+
+			for (int i = 0; i < number_of_positions_to_probe; i++) {
+				vectors[i] = make_single_autolevel_measure(positions_to_probe[i][X_AXIS], positions_to_probe[i][Y_AXIS], z_steps);
+				this->autolevel_progress++;
+			}
+
+			// estimate the plate normal with least squares
+			// a X + b Y + c = Z
+			// calculate a, b and c
+			double * matrix = new double[number_of_positions_to_probe * 3];
+			double * result = new double[number_of_positions_to_probe];
+			for (int i = 0; i < number_of_positions_to_probe; i++) {
+				matrix[i + 0 * number_of_positions_to_probe] = vectors[i].x;
+				matrix[i + 1 * number_of_positions_to_probe] = vectors[i].y;
+				matrix[i + 2 * number_of_positions_to_probe] = 1;
+				result[i] = vectors[i].z;
+			}
+
+			double * solution = qr_solve(number_of_positions_to_probe, 3, matrix, result );
+
+			delete[] matrix;
+			delete[] result;
+
+			// The plane can be described this way:
+			// Z = a X + b Y + c
+			// Displacing it to the 0,0,0
+			// Z = a X + b Y -> a X + b Y - Z = 0 -> [a b -1]*transpose([X Y Z]) = 0
+			// So, [a b -1] is the plane normal vector
+			vector_3 planeNormal = vector_3(-solution[0], -solution[1], 1.0);
+			// free memory from equation resolution
+			free(solution);
+
+			// Go to the rotation position. This position won't change regardless of the
+			// transformation. This prevents us from doing another unecessary home all.
+			endstops->lift_z_safe_homing_distance();
+			endstops->go_to_rotation_position();
+
+			THEKERNEL->robot->transformation.set_to_identity();
+
+			THEKERNEL->robot->transformation = matrix_3x3::create_look_at(planeNormal);
+
+			// Do homing again! Now that the transformation matrix has been set, we can
+			// use it to compensate the sensor z distance.
+			// Note: Remember not to call GCode G28 from here. Otherwise, it can lead 
+			// to an infinite loop, asi G28 can call an autolevel if configured properly.
+			homing[X_AXIS] = false;
+			homing[Y_AXIS] = false;
+			endstops->do_safe_homing_and_compensate_z(homing, gcode->stream);
+
+			// Finish percentage
+			this->autolevel_progress++;
+
+			// notify beginning of autolevel
+			status.event = al_end;
+			THEKERNEL->call_event(ON_AUTOLEVEL_STATUS_CHANGE, &status);
+		} else if ( gcode->g == 30 ) {
+			gcode->mark_as_taken();
+
+			// Enable the motors
+			THEKERNEL->stepper->turn_enable_pins_on();
+
+			// G29 is received, we have work to do
+
+			// notify beginning of autolevel
+			this->autolevel_progress = 0;	// reset progress value
+			autolevel_status_change_t status;
+			status.event = al_begin;
+			THEKERNEL->call_event(ON_AUTOLEVEL_STATUS_CHANGE, &status);
+
+			// Clear transformation matrix
+			THEKERNEL->robot->transformation.set_to_identity();
+
+			/* To do the leveling, first we need to home all axes... */
+			bool homing[] = {true, true, true};
+			endstops->do_safe_homing_and_leave_zprobe_active(homing, gcode->stream);
+			this->autolevel_progress++;
+
+			/* To create the differences, we need the z value for each of the 4 points.
+			 * The X,Y positions of the probing points are absolute, we need to move the steppers
+			 * relative to where we are...
+			 *
+			 * All of these movements are meant to be for a cartesian robot, they *NEED* to be changed
+			 * to support a corexy robot. */
+
+			//after we measure the first time, we need to save the number of steps to move up to compensate for what we went down...
+			int z_steps = raise_z * steps_per_mm[GAMMA_STEPPER];
+
+			int cant_x = gcode->has_letter('U')?gcode->get_value('U'):3;
+			int cant_y = gcode->has_letter('V')?gcode->get_value('V'):3;
+
+			int no_of_measures = cant_x * cant_y;
+
+			vector_3* vectors = new vector_3[no_of_measures];
+			float delta_x = gcode->has_letter('X')?gcode->get_value('X'):(area_to_probe_g30_max[X_AXIS]-area_to_probe_g30_min[X_AXIS]);
+			float delta_y = gcode->has_letter('Y')?gcode->get_value('Y'):(area_to_probe_g30_max[Y_AXIS]-area_to_probe_g30_min[Y_AXIS]);
+			float off_x = gcode->has_letter('I')?gcode->get_value('I'):area_to_probe_g30_min[X_AXIS];
+			float off_y = gcode->has_letter('J')?gcode->get_value('J'):area_to_probe_g30_min[Y_AXIS];
+
+			int pos = 0;
+			for (int j = 0; j < cant_y; j++) {
+				for (int i = 0; i < cant_x; i++) {
+					float x = (j % 2)?(off_x + delta_x * i / (cant_x - 1)):(off_x + delta_x * (cant_x - i - 1) / (cant_x - 1));
+					float y = off_y + delta_y * j / (cant_y - 1);
+					vectors[pos++] = make_single_autolevel_measure(x, y, z_steps);
+					this->autolevel_progress++;
+				}
+			}
+
+			// estimate the plate normal with least squares
+			// a X + b Y + c = Z
+			// calculate a, b and c
+			double * matrix = new double[no_of_measures * 3];
+			double * result = new double[no_of_measures];
+			for (int i = 0; i < no_of_measures; i++) {
+				matrix[i + 0 * no_of_measures] = vectors[i].x;
+				matrix[i + 1 * no_of_measures] = vectors[i].y;
+				matrix[i + 2 * no_of_measures] = 1;
+
+				result[i] = vectors[i].z;
+			}
+			double * solution = qr_solve(no_of_measures, 3, matrix, result );
+
+			delete[] matrix;
+			delete[] result;
+			delete[] vectors;
+
+			// The plane can be described this way:
+			// Z = a X + b Y + c
+			// Displacing it to the 0,0,0
+			// Z = a X + b Y -> a X + b Y - Z = 0 -> [a b -1]*transpose([X Y Z]) = 0
+			// So, [a b -1] is the plane normal vector
+			vector_3 planeNormal = vector_3(-solution[0], -solution[1], 1.0);
+			// free memory from equation resolution
+			free(solution);
+
+
+			// Go to the rotation position. This position won't change regardless of the
+			// transformation. This prevents us from doing another unecessary home all.
+			endstops->lift_z_safe_homing_distance();
+			endstops->go_to_rotation_position();
+
+			THEKERNEL->robot->transformation.set_to_identity();
+
+			THEKERNEL->robot->transformation = matrix_3x3::create_look_at(planeNormal);
+
+			// Do homing again! Now that the transformation matrix has been set, we can
+			// use it to compensate the sensor z distance.
+			// Note: Remember not to call GCode G28 from here. Otherwise, it can lead
+			// to an infinite loop, asi G28 can call an autolevel if configured properly.
+			homing[X_AXIS] = false;
+			homing[Y_AXIS] = false;
+			endstops->do_safe_homing_and_compensate_z(homing, gcode->stream);
+
+			// Finish percentage
+			this->autolevel_progress++;
+
+			// notify beginning of autolevel
+			status.event = al_end;
+			THEKERNEL->call_event(ON_AUTOLEVEL_STATUS_CHANGE, &status);
+		}
+	} else if (gcode->has_m){
+		if ( gcode->m == 734) {	// M734 get or set transformation matrix
+			// TODO Keep in sync with M500/M503
+			THEKERNEL->conveyor->wait_for_empty_queue();
+			THEKERNEL->robot->transformation.debug("Transformation matrix");
+			if (gcode->has_letter('X') && gcode->has_letter('Y')) {
+				double slope_x = gcode->get_value('X');
+				double slope_y = gcode->get_value('Y');
+				if (abs(slope_x) > 1 || abs(slope_y) > 1) {
+					gcode->stream->printf("Invalid params (values must be <= 1 and >= -1)\r\n");
+				} else {
+					vector_3 from_2_to_1 = vector_3(1, 0, slope_x);
+					vector_3 from_2_to_3 = vector_3(0, 1, slope_y);;
+					THEKERNEL->robot->transformation = matrix_3x3::create_look_at(vector_3::cross(from_2_to_1, from_2_to_3).get_normal());
+					THEKERNEL->robot->transformation.debug("Matrix set");
+				}
+			}
+
+		} else if ( gcode->m == 735) {	// M735 clean transformation matrix
+			THEKERNEL->conveyor->wait_for_empty_queue();
+			gcode->stream->printf("Info: Transformation matrix clean\r\n");
+			THEKERNEL->robot->transformation.set_to_identity();
+		} else if ( gcode->m == 738) {	// M738 Set autolevel points
+			THEKERNEL->conveyor->wait_for_empty_queue();
+			// TODO Keep in sync with M500/M503
+			gcode->stream->printf("Info: Setting autolevel points (a, b), (i, j), (m,n), (x, y)\n");
+			if (gcode->has_letter('P') && gcode->has_letter('X') && gcode->has_letter('Y')) {
+				int index = gcode->get_value('P');
+				if (index >= 0 && index < 4) {
+					positions_to_probe[index][X_AXIS] = gcode->get_value('X');
+					positions_to_probe[index][Y_AXIS] = gcode->get_value('Y');
+					update_area_to_probe_g30();
+				} else {
+					gcode->stream->printf("Error: Syntax M738 P<point> X<x> Y<y> \n");
+				}
+			}
+			if (gcode->has_letter('A') && gcode->has_letter('B') && gcode->has_letter('I') && gcode->has_letter('J') && gcode->has_letter('M') && gcode->has_letter('N') && gcode->has_letter('X') && gcode->has_letter('Y')) {
+				positions_to_probe[0][X_AXIS] = gcode->get_value('A');
+				positions_to_probe[0][Y_AXIS] = gcode->get_value('B');
+				positions_to_probe[1][X_AXIS] = gcode->get_value('I');
+				positions_to_probe[1][Y_AXIS] = gcode->get_value('J');
+				positions_to_probe[2][X_AXIS] = gcode->get_value('M');
+				positions_to_probe[2][Y_AXIS] = gcode->get_value('N');
+				positions_to_probe[3][X_AXIS] = gcode->get_value('X');
+				positions_to_probe[3][Y_AXIS] = gcode->get_value('Y');
+				update_area_to_probe_g30();
+			}
+			gcode->stream->printf("Info: (%f, %f) (%f, %f) (%f, %f) (%f, %f)\n",
+				positions_to_probe[0][X_AXIS],
+				positions_to_probe[0][Y_AXIS],
+				positions_to_probe[1][X_AXIS],
+				positions_to_probe[1][Y_AXIS],
+				positions_to_probe[2][X_AXIS],
+				positions_to_probe[2][Y_AXIS],
+				positions_to_probe[3][X_AXIS],
+				positions_to_probe[3][Y_AXIS]);
+			gcode->stream->printf("M738 A%f B%f I%f J%f M%f N%f X%f Y%f\n",
+				positions_to_probe[0][X_AXIS],
+				positions_to_probe[0][Y_AXIS],
+				positions_to_probe[1][X_AXIS],
+				positions_to_probe[1][Y_AXIS],
+				positions_to_probe[2][X_AXIS],
+				positions_to_probe[2][Y_AXIS],
+				positions_to_probe[3][X_AXIS],
+				positions_to_probe[3][Y_AXIS]);
+		} else if ( gcode->m == 510 || gcode->m == 513) {	// Save factory settings
+			gcode->stream->printf("; Autolevel points\r\n");
+			gcode->stream->printf("M738 A%f B%f I%f J%f M%f N%f X%f Y%f\n",
+				positions_to_probe[0][X_AXIS],
+				positions_to_probe[0][Y_AXIS],
+				positions_to_probe[1][X_AXIS],
+				positions_to_probe[1][Y_AXIS],
+				positions_to_probe[2][X_AXIS],
+				positions_to_probe[2][Y_AXIS],
+				positions_to_probe[3][X_AXIS],
+				positions_to_probe[3][Y_AXIS]);
+		/*} else if ( gcode->m == 500 || gcode->m == 503) {	// M500
+			float heatbed_x_slope = THEKERNEL->robot->get_axis_autolevel_slope(X_AXIS);
+			float heatbed_y_slope = THEKERNEL->robot->get_axis_autolevel_slope(Y_AXIS);
+			gcode->stream->printf("; Autolevel configuration\r\n; Transformation matrix\r\nG34 X%f Y%f\r\n; Positions to probe\r\nG38 A%d B%d I%d J%d X%d Y%d\r\n", 
+				heatbed_x_slope,
+				heatbed_y_slope,
+				positions_to_probe[0][X_AXIS],
+				positions_to_probe[0][Y_AXIS],
+				positions_to_probe[1][X_AXIS],
+				positions_to_probe[1][Y_AXIS],
+				positions_to_probe[2][X_AXIS],
+				positions_to_probe[2][Y_AXIS]
+			);*/
+		}
+	}
+}
+
+vector_3 AutoLevel::make_single_autolevel_measure(float pos_x, float pos_y, int& z_steps)
+{
+	float start_position[3];
+	THEKERNEL->robot->get_robot_cartesian_axis_position(start_position);	// As the transformation matrix was just cleaned, get_axis_position returns the same as get_robot_cartesian_axis_position
+	float start_position_act[3];
+	THEKERNEL->robot->arm_solution->cartesian_to_actuator(start_position, start_position_act);
+	float position_to_probe[3] = {pos_x, pos_y, 0.0};
+	float position_to_probe_act[3];
+	THEKERNEL->robot->arm_solution->cartesian_to_actuator(position_to_probe, position_to_probe_act);
+
+	float alpha = position_to_probe_act[ALPHA_STEPPER];
+	float beta  = position_to_probe_act[BETA_STEPPER];
+	bool alpha_dir = alpha <= start_position_act[ALPHA_STEPPER];
+	float real_alpha_move = abs(alpha - start_position_act[ALPHA_STEPPER]);
+
+	bool beta_dir = beta <= start_position_act[BETA_STEPPER];
+	float real_beta_move = abs(beta - start_position_act[BETA_STEPPER]);
+
+	this->steppers[ALPHA_STEPPER]->set_speed(fast_move_xy);
+	this->steppers[ALPHA_STEPPER]->move(alpha_dir, real_alpha_move * this->steps_per_mm[ALPHA_STEPPER]);
+
+	this->steppers[BETA_STEPPER]->set_speed(fast_move_xy);
+	this->steppers[BETA_STEPPER]->move(beta_dir, real_beta_move * this->steps_per_mm[BETA_STEPPER]);
+
+	this->steppers[GAMMA_STEPPER]->set_speed(fast_move_z);
+	this->steppers[GAMMA_STEPPER]->move(0, z_steps);
+
+	// Wait for moves to be done
+	for ( char c = 'X'; c <= 'Z'; c++ ) {
+		while ( this->steppers[c - 'X']->moving ) {
+			THEKERNEL->call_event(ON_IDLE);
+		}
+	}
+
+	// Calculate the virtual/theorical position of this point (considering slopex and slopey=0)
+	float position_to_probe_virtual[3];
+	THEKERNEL->robot->robot_to_virtual_without_autolevel(position_to_probe, position_to_probe_virtual);
+	THEKERNEL->robot->reset_axis_position(position_to_probe_virtual[X_AXIS], X_AXIS);
+	THEKERNEL->robot->reset_axis_position(position_to_probe_virtual[Y_AXIS], Y_AXIS);
+	THEKERNEL->robot->reset_axis_position(raise_z, Z_AXIS);
+
+	// Now, down with the z axis until we hit the endstop...
+	this->steppers[GAMMA_STEPPER]->set_speed(slow_move_z);
+
+	float steps_to_move = (50 + raise_z)
+			* this->steps_per_mm[GAMMA_STEPPER];
+
+	this->steppers[GAMMA_STEPPER]->move(1, steps_to_move);
+
+	bool running = true;
+	unsigned int debounce = 0;
+	float remaining_steps =0;
+	while (running) {
+		running = false;
+		THEKERNEL->call_event(ON_IDLE);
+		if ( endstops->clicked_endstop_gamma_min() ) {
+			if ( debounce < 3 ) {
+				debounce++;
+				running = true;
+			} else if ( this->steppers[GAMMA_STEPPER]->moving ) {
+				remaining_steps = this->steppers[GAMMA_STEPPER]->steps_to_move - this->steppers[GAMMA_STEPPER]->stepped;
+				this->steppers[GAMMA_STEPPER]->move(0, 0);
+			}
+		} else {
+			// The endstop was not hit yet
+			running = true;
+			debounce = 0;
+		}
+	}
+
+	float real_z = raise_z - ( ( steps_to_move - remaining_steps ) / steps_per_mm[GAMMA_STEPPER]) ;
+
+	// We have to go up the same number of steps that we went down,
+	// so the next measure is relative to the z heigt at xy{0,0}
+	z_steps = steps_to_move - remaining_steps;
+
+	return vector_3(pos_x, pos_y, real_z);
+}
+
+void AutoLevel::on_get_public_data(void* argument){
+    PublicDataRequest* pdr = static_cast<PublicDataRequest*>(argument);
+
+    if(!pdr->starts_with(autolevel_checksum)) return;
+
+    if(pdr->second_element_is(progress_checksum)) {
+        static int autolevel_progress_perc;
+        autolevel_progress_perc = (100 * autolevel_progress) / (number_of_positions_to_probe + 2);
+        pdr->set_data_ptr(&autolevel_progress_perc);
+        pdr->set_taken();
+    }
+}
+
+void AutoLevel::update_area_to_probe_g30(){
+	area_to_probe_g30_min[X_AXIS] = 99999999;
+	area_to_probe_g30_min[Y_AXIS] = 99999999;
+	area_to_probe_g30_max[X_AXIS] = 0;
+	area_to_probe_g30_max[Y_AXIS] = 0;
+	for (int i = 0; i < number_of_positions_to_probe; i++) {
+		area_to_probe_g30_min[X_AXIS] = min(area_to_probe_g30_min[X_AXIS], positions_to_probe[i][X_AXIS]);
+		area_to_probe_g30_max[X_AXIS] = max(area_to_probe_g30_max[X_AXIS], positions_to_probe[i][X_AXIS]);
+		area_to_probe_g30_min[Y_AXIS] = min(area_to_probe_g30_min[Y_AXIS], positions_to_probe[i][Y_AXIS]);
+		area_to_probe_g30_max[Y_AXIS] = max(area_to_probe_g30_max[Y_AXIS], positions_to_probe[i][Y_AXIS]);
+	}
+}

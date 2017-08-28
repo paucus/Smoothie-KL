@@ -1,0 +1,25 @@
+LÉAME
+*****
+Este Dispositivo de Almacenamiento Externo no es real.  Se trata de un dispositivo virtual mostrado por el software de Kikai Labs para informarle que no ha sido insertada una tarjeta SD externa en su impresora. Si ya lo hizo y no puede verla, quizás desee continuar leyendo este documento para entender cómo montarla adecuadamente. De otra forma, lea la documentación en el sitio web de Kikai Labs.
+
+CÓMO USARLA
+***********
+Para montar una tarjeta SD externa en la computadora, siga los siguientes pasos:
+* Desmonte/Extraiga este Dispositivo de Almacenamiento Externo de su computadora.
+* Desconecte el cable USB de la computadora.
+* Inserte una tarjeta SD en la ranura del lector SD.
+* Usando la pantalla LCD, abra la pantalla para elegir el archivo a imprimir. Al hacer esto, la impresora escanea por nuevas tarjetas SD.
+  Si lo prefiere, puede desmontar y remontar manualmente la tarjeta SD desde su cliente de la impresora. La mayoría de los clientes más populares le permiten hacer esto.
+  Si su cliente no cuenta con esta funcionalidad, puede hacerlo manualmente corriendo el código G M721 desde el cliente de la impresora para hacer lo mismo. 
+* Después de hacer esto, conecte otra vez el cable USB.
+* El sistema operativo detectará un nuevo Dispositivo de Almacenamiento Externo y le permitirá montarlo.
+* Después de montarlo, verá el contenido de la tarjeta SD externa.
+
+Para extraer la tarjeta SD, siga los siguientes pasos:
+* Una vez que haya hecho todos los cambios necesarios en el Dispositivo de Almacenamiento Externo, desmonte/extraiga el Dispositivo de Almacenamiento Externo de su computadora.
+* Espere a que el sistema operativo le confirme que puede extraer el dispositivo. Espere unos segundos para permitirle a la impresora escribir todos los cambios en la tarjeta. 
+* Extraiga físicamente la tarjeta de la ranura del lector SD.
+* Usando la pantalla LCD, abra la pantalla para elegir el archivo a imprimir. Al hacer esto, la impresora escanea por nuevas tarjetas SD, y detectará que no hay ninguna tarjeta SD presente.
+  Si lo prefiere, puede desmontar y remontar manualmente la tarjeta SD desde su cliente de la impresora. La mayoría de los clientes más populares le permiten hacer esto.
+  Si su cliente no cuenta con esta funcionalidad, puede hacerlo manualmente corriendo el código G M721 desde el cliente de la impresora para hacer lo mismo.
+* Puede reconectar el cable USB si desea continuar usando la impresora.

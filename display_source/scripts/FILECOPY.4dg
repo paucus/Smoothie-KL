@@ -1,0 +1,53 @@
+#platform "uLCD-32PTU"
+
+#inherit "4DGL_16bitColours.fnc"
+#constant BUFFSIZE 512
+#MODE RUNFLASH
+
+func file_copy(var f1, var f2)
+    var fh1, fh2;
+    var *data_ptr;
+    var bytes_read, bytes_writen;
+
+    if(!file_Exists(f1) || file_Exists(f2))
+        // Cancel
+        return 1;
+    endif
+
+    fh1 := file_Open(f1, 'r');
+    if (!fh1)
+        return 2;
+    endif
+    fh2 := file_Open(f2, 'w');
+    if (!fh2)
+        file_Close(fh1);
+        return 3;
+    endif
+
+    data_ptr := mem_AllocV(BUFFSIZE);
+
+    repeat
+        bytes_read := file_Read(data_ptr, BUFFSIZE, fh1);
+        if(bytes_read == 0)
+            goto fin;
+        endif
+        bytes_writen := file_Write(str_Ptr(data_ptr), bytes_read, fh2);
+        if (bytes_read != bytes_writen)
+            file_Close(fh1);
+            file_Close(fh2);
+            return 4;
+        endif
+        media_Flush();
+    forever
+
+    fin:
+
+    file_Close(fh1);
+    file_Close(fh2);
+
+    mem_Free(data_ptr);
+
+    return 0;
+endfunc
+
+

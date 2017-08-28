@@ -1,0 +1,4 @@
+printing_area_boundary_max_z                 300
+
+temperature_control.hotend.beta              4210
+temperature_control.hotend.thermistor        EPCOS100K

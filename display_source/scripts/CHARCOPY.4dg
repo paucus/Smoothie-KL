@@ -1,0 +1,86 @@
+#platform "uLCD-32PTU"
+
+func main(var f1, var f2)
+    var fh1, fh2;
+    var feof_fh1;
+    var err;
+    var char_read;
+    var hiLen, loLen;
+    var i, j, k;
+
+    if(!file_Exists(f1) || file_Exists(f2))
+        // Cancel
+        return 0;
+    endif
+
+    fh1 := file_Open(f1, 'r');
+    if (!fh1)
+        return 0;
+    endif
+
+    // Calculate the file size.
+    file_Seek(fh1, 0x7FFF, 0xFFFF);
+    file_Tell(fh1, &hiLen, &loLen);
+    file_Seek(fh1, 0, 0);
+    fh2 := file_Open(f2, 'w');
+    if (!fh2)
+        file_Close(fh1);
+        return 0;
+    endif
+
+    // Write 16kb blocks
+    for (i := 0; i < hiLen; i++)
+        for (k := 0; k < 4; k++)
+            for (j := 0; j < 0x4000; j++)
+                char_read := file_GetC(fh1);
+                err := file_Error();
+                if(err != 0)
+                    // Es lenguaje choto. Ni me voy a gastar en pensar otra manera de salir del loop.
+                    goto fin;
+                endif
+            next
+            file_Close(fh2);
+            fh2 := file_Open(fh2, 'a');
+            if (!fh2)
+                // Es lenguaje choto. Ni me voy a gastar en pensar otra manera de salir del loop.
+                goto fin;
+            endif
+        next
+    next
+
+    while (loLen >= 0x4000)
+        for (j := 0; j < 0x4000; j++)
+            char_read := file_GetC(fh1);
+            err := file_Error();
+            if(err != 0)
+                // Es lenguaje choto. Ni me voy a gastar en pensar otra manera de salir del loop.
+                goto fin;
+            endif
+        next
+        file_Close(fh2);
+        fh2 := file_Open(fh2, 'a');
+        if (!fh2)
+            // Es lenguaje choto. Ni me voy a gastar en pensar otra manera de salir del loop.
+            goto fin;
+        endif
+
+        loLen -= 0x4000;
+    wend
+
+    for (j := 0; j < loLen; j++)
+        char_read := file_GetC(fh1);
+        err := file_Error();
+        if(err != 0)
+            // Es lenguaje choto. Ni me voy a gastar en pensar otra manera de salir del loop.
+            goto fin;
+        endif
+    next
+
+    fin:
+
+    file_Close(fh1);
+    file_Close(fh2);
+
+    return 1;
+endfunc
+

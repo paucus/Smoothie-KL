@@ -1,0 +1,5 @@
+;Z probe length (mm):
+M737 C1
+;Serial Number:
+M550 M1-0000 
+

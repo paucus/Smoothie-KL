@@ -1,0 +1,291 @@
+dfu_enable                                   true             # enable dfu
+
+# Robot module configurations : general handling of movement G-codes and slicing into moves
+default_feed_rate                            4000             # Default rate ( mm/minute ) for G1/G2/G3 moves
+default_seek_rate                            4000             # Default rate ( mm/minute ) for G0 moves
+mm_per_arc_segment                           0.5              # Arcs are cut into segments ( lines ), this is the length for these segments.  Smaller values mean more resolution, higher values mean faster computation
+mm_per_line_segment                          5                # Lines can be cut into segments ( not usefull with cartesian coordinates robots ).
+
+# Arm solution configuration : Cartesian robot. Translates mm positions into stepper positions
+arm_solution                                 corexy           #enable corexy tocado EZE :) (el valor default es cartesian)
+
+alpha_steps_per_mm                           80               # Steps per mm for alpha stepper
+beta_steps_per_mm                            80               # Steps per mm for beta stepper
+#gamma_steps_per_mm                           1600             # Steps per mm for gamma stepper (pitch=2mm)
+gamma_steps_per_mm                           800              # Steps per mm for gamma stepper (pitch=4mm)
+
+# Planner module configuration : Look-ahead and acceleration configuration
+planner_queue_size                           32               # Size of the planning queue, must be a power of 2. 128 seems to be the maximum.
+#acceleration                                 3000             # Acceleration in mm/second/second.
+acceleration                                 1000             # Acceleration in mm/second/second.   TOCADO EZE
+acceleration_ticks_per_second                1000             # Number of times per second the speed is updated
+junction_deviation                           0.05             # Similar to the old "max_jerk", in millimeters, see : https://github.com/grbl/grbl/blob/master/planner.c#L409
+                                                              # and https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.8 . Lower values mean being more careful, higher values means being faster and have more jerk
+
+# Stepper module configuration
+microseconds_per_step_pulse                  1                # Duration of step pulses to stepper drivers, in microseconds
+minimum_steps_per_minute                     1200             # Never step slower than this
+base_stepping_frequency                      100000           # Base frequency for stepping, higher gives smoother movement
+
+# Stepper module pins ( ports, and pin numbers, appending "!" to the number will invert a pin )
+alpha_step_pin                               2.0              # Pin for alpha stepper step signal
+alpha_dir_pin                                0.5              # Pin for alpha stepper direction
+alpha_en_pin                                 0.4              # Pin for alpha enable pin
+alpha_current                                1.0              # X stepper motor current
+x_axis_max_speed                             12000            # mm/min
+
+beta_step_pin                                2.1              # Pin for beta stepper step signal
+beta_dir_pin                                 0.11             # Pin for beta stepper direction
+beta_en_pin                                  0.10             # Pin for beta enable
+beta_current                                 1.0              # Y stepper motor current
+y_axis_max_speed                             12000            # mm/min
+
+gamma_step_pin                               2.2              # Pin for gamma stepper step signal
+gamma_dir_pin                                0.20             # Pin for gamma stepper direction
+gamma_en_pin                                 0.19             # Pin for gamma enable
+gamma_current                                1.20             # Z stepper motor current
+z_axis_max_speed                             700              # mm/min
+
+# Serial communications configuration ( baud rate default to 9600 if undefined )
+uart0.baud_rate                              115200           # Baud rate for the default hardware serial port
+second_usb_serial_enable                     false            # This enables a second usb serial port (to have both pronterface and a terminal connected)
+
+# Extruder module configuration
+extruder_module_enable                       true             # Whether to activate the extruder module at all. All configuration is ignored if false
+#extruder_steps_per_mm                        630              # Steps per mm for extruder stepper
+extruder_steps_per_mm                        98               # Steps per mm for extruder stepper   TOCADO EZE
+extruder_default_feed_rate                   600              # Default rate ( mm/minute ) for moves where only the extruder moves
+extruder_acceleration                        50               # Acceleration for the stepper motor, as of 0.6, arbitrary ratio
+extruder_max_speed                           1000             # mm^3/s
+
+extruder_step_pin                            2.3              # Pin for extruder step signal
+extruder_dir_pin                             0.22             # Pin for extruder dir signal
+extruder_en_pin                              0.21             # Pin for extruder enable signal
+delta_current                                1.00             # Extruder stepper motor current
+
+# Laser module configuration
+laser_module_enable                          false            # Whether to activate the laser module at all. All configuration is ignored if false.
+#laser_module_pin                             2.7              # this pin will be PWMed to control the laser
+#laser_module_max_power                       0.8              # this is the maximum duty cycle that will be applied to the laser
+#laser_module_tickle_power                    0.0              # this duty cycle will be used for travel moves to keep the laser active without actually burning
+
+# Hotend temperature control configuration
+temperature_control.hotend.enable            true             # Whether to activate this ( "hotend" ) module at all. All configuration is ignored if false.
+temperature_control.hotend.thermistor_pin    0.23             # Pin for the thermistor to read
+temperature_control.hotend.heater_pin        2.7              # Pin that controls the heater
+temperature_control.hotend.thermistor        Honeywell100K    # EPCOS100K        # see src/modules/tools/temperaturecontrol/TemperatureControl.cpp:64 for a list of valid thermistor names    tocado EZE
+temperature_control.hotend.beta              3950
+temperature_control.hotend.set_m_code        104              #
+temperature_control.hotend.set_and_wait_m_code 109            #
+temperature_control.hotend.designator        T                #
+
+temperature_control.hotend.p_factor         15.4              # permanenetly set the PID values after an auto pid
+temperature_control.hotend.i_factor         0.820             #
+temperature_control.hotend.d_factor         72                #
+
+#temperature_control.hotend.max_pwm          64               # override max pwm, 64 is a good value if driving a 12v resistor with 24v.
+
+temperature_control.bed.enable               true             #
+temperature_control.bed.thermistor_pin       0.24             #
+temperature_control.bed.heater_pin           2.5              #
+temperature_control.bed.thermistor           Honeywell100K    # see src/modules/tools/temperaturecontrol/TemperatureControl.cpp:64 for a list of valid thermistor names
+temperature_control.bed.beta                 3950
+temperature_control.bed.set_m_code           140              #
+temperature_control.bed.set_and_wait_m_code  190              #
+temperature_control.bed.designator           B                #
+
+# begin tocado EZE
+temperature_control.bed.p_factor         257.4                # permanenetly set the PID values after an auto pid
+temperature_control.bed.i_factor         24.573               #
+temperature_control.bed.d_factor         674                  #
+
+# temperature_control.bed.wait_until_fail_seconds 45            # if we cant get a reading for this number of seconds, we stop the heat
+# ESTO ES UN HACK DE AGUS
+# end tocado EZE
+
+# Switch module for fan control
+switch.fan.enable                            true             #
+switch.fan.input_on_command                  M106             #
+switch.fan.input_off_command                 M107             #
+switch.fan.output_pin                        2.4              #
+
+#switch.misc.enable                           true             #
+#switch.misc.input_on_command                 M42              #
+#switch.misc.input_off_command                M43              #
+#switch.misc.output_pin                       2.4              #
+
+# Switch module for spindle control
+#switch.spindle.enable                        false            #
+
+# Endstops
+endstops_enable                              true             # the endstop module is enabled by default and can be disabled here
+corexy_homing                               true            # set to true if homing on a hbit or corexy tocado EZE
+alpha_min_endstop                            1.25^            # add a ! to invert if endstop is NO connected to ground
+alpha_max_endstop                            1.24^            #
+alpha_homing_direction                       home_to_max      # or set to home_to_max and set alpha_max
+alpha_min                                    0                # this gets loaded after homing when home_to_min is set
+alpha_max                                    365              # this gets loaded after homing when home_to_max is set
+#beta_min_endstop                             1.26^!           #
+#beta_max_endstop                             1.27^            #
+beta_min_endstop                             1.27^            #
+beta_max_endstop                             1.26^            #
+beta_homing_direction                        home_to_max      #
+beta_min                                     0                #
+beta_max                                     200              #
+#gamma_min_endstop                            1.28^!            #tocado AB :)
+gamma_min_endstop                            1.28^            #tocado AB :) <--- el sensor capacitivo chino es invertido
+gamma_max_endstop                            1.29^            #
+gamma_homing_direction                       home_to_min      #
+gamma_min                                    0                #
+gamma_max                                    300              #
+
+#alpha_fast_homing_rate_mm_s                  50               # feedrates in mm/second
+#beta_fast_homing_rate_mm_s                   50               # "
+alpha_fast_homing_rate_mm_s                  140               # feedrates in mm/second
+beta_fast_homing_rate_mm_s                   140               # "
+gamma_fast_homing_rate_mm_s                  11.7              # "
+alpha_slow_homing_rate_mm_s                  25               # "
+beta_slow_homing_rate_mm_s                   25               # "
+gamma_slow_homing_rate_mm_s                  2                # "
+
+alpha_homing_retract_mm                      5                # distance in mm
+beta_homing_retract_mm                       5                # "
+gamma_homing_retract_mm                      1                # "
+
+# Pause button
+pause_button_enable                          false             # tocado EZE: Disable pause button because we will use pin 2.12.
+
+# Panel
+panel.enable                                 false             # set to true to enable the panel code
+panel.lcd                                    smoothiepanel     # set type of panel also viki_lcd, i2c_lcd is a generic i2c panel, panelolu2
+panel.encoder_a_pin                          1.22!^            # encoder pin
+panel.encoder_b_pin                          1.23!^            # encoder pin
+
+# Example for reprap discount GLCD
+# on glcd EXP1 is to left and EXP2 is to right, pin 1 is bottom left, pin 2 is top left etc.
+# +5v is EXP1 pin 10, Gnd is EXP1 pin 9
+#panel.lcd                                   reprap_discount_glcd     #
+#panel.spi_channel                           0                 # spi channel to use  ; GLCD EXP1 Pins 3,5 (MOSI, SCLK)
+#panel.spi_cs_pin                            0.16              # spi chip select     ; GLCD EXP1 Pin 4
+#panel.encoder_a_pin                         1.22!^            # encoder pin         ; GLCD EXP2 Pin 3
+#panel.encoder_b_pin                         1.23!^            # encoder pin         ; GLCD EXP2 Pin 5
+#panel.click_button_pin                      1.30!^            # click button        ; GLCD EXP1 Pin 2
+#panel.buzz_pin                              1.31              # pin for buzzer      ; GLCD EXP1 Pin 1
+#panel.button_pause_pin                      2.11^             # kill/pause          ; GLCD EXP2 Pin 8
+
+# pins used with other panels
+#panel.up_button_pin                         0.1!              # up button if used
+#panel.down_button_pin                       0.0!              # down button if used
+#panel.click_button_pin                      0.18!             # click button if used
+
+panel.menu_offset                            0                 # some panels will need 1 here
+
+panel.alpha_jog_feedrate                     6000              # x jogging feedrate in mm/min
+panel.beta_jog_feedrate                      6000              # y jogging feedrate in mm/min
+panel.gamma_jog_feedrate                     200               # z jogging feedrate in mm/min
+
+panel.hotend_temperature                     185               # temp to set hotend when preheat is selected
+panel.bed_temperature                        60                # temp to set bed when preheat is selected
+
+# Example of a custom menu entry, which will show up in the Custom entry.
+# NOTE _ gets converted to space in the menu and commands, | is used to separate multiple commands
+custom_menu.power_on.enable                  true              #
+custom_menu.power_on.name                    Power_on          #
+custom_menu.power_on.command                 M80               #
+
+custom_menu.power_off.enable                 true              #
+custom_menu.power_off.name                   Power_off         #
+custom_menu.power_off.command                M81               #
+
+# Only needed on a smoothieboard
+currentcontrol_module_enable                 true              #
+
+return_error_on_unhandled_gcode              false             #
+
+# Network Configuration
+network.enable                               false             # enable the ethernet network services
+network.webserver.enable                     true              # enable the webserver
+network.telnet.enable                        true              # enable the telnet server
+network.ip_address                           172.30.172.180
+
+#####################################
+###### KikaiLabs configuration ######
+#####################################
+
+
+# End of Filament
+end_of_filament_enable                       true
+end_of_filament_pin                          1.27^!
+report_out_of_filament_event                 false
+request_pause_on_out_of_filament_event       false
+printer_parking_enable                       true
+run_M600_on_out_of_filament_event            true
+
+
+# Autoleveling configuration!
+autolevel_enable                             true             # the autolevel is disabled by default
+autolevel_raise_z_on_check                   5                # the number of millimiters to raise the hotend
+autolevel_fast_move                          7800
+autolevel_slow_move                          3600
+
+autolevel_rotation_vertex_x                  185
+autolevel_rotation_vertex_y                  112.9
+autolevel_rotation_vertex_z                  0
+autolevel_rotation_vertex_virtual_x          175
+autolevel_rotation_vertex_virtual_y          118
+autolevel_rotation_vertex_virtual_z          0
+
+autolevel_positions_to_probe_0x              299
+autolevel_positions_to_probe_0y              184.5
+autolevel_positions_to_probe_1x              146
+autolevel_positions_to_probe_1y              184.5
+autolevel_positions_to_probe_2x              146
+autolevel_positions_to_probe_2y              44.5
+autolevel_positions_to_probe_3x              299
+autolevel_positions_to_probe_3y              44.5
+
+# Safe Homing
+safe_homing                                  true
+x_safe_homing_position                       185
+y_safe_homing_position                       112.9
+z_safe_homing_position                       10
+correct_nozzle_distance_to_bed               true
+
+# ZProbe (From KikaiLabs)
+z_probe_dist_x                               -35
+z_probe_dist_y                               0
+z_probe_dist_z                               0
+zprobe_length                                3.7
+#zprobe_type                                 position_based_retractable_zprobe
+#position_based_zprobe_enable_position_x     0
+#position_based_zprobe_disable_position_x    361
+#position_based_zprobe_toggle_speed          100.0
+zprobe_type                                  unretractable_zprobe
+
+printing_area_boundary_max_x                 350
+printing_area_boundary_min_x                 0
+printing_area_boundary_max_y                 186
+printing_area_boundary_min_y                 0
+printing_area_boundary_max_z                 320
+printing_area_boundary_min_z                 0
+
+# Status Report
+#statusreport.enable                         true
+#statusreport.fan.enable                     true
+#statusreport.fan.key                        switch.fan.state
+#statusreport.fan.label                      fan
+#statusreport.fan.type                       switch_state
+# Repeat for each status to report
+
+
+# Force Sensitive Resistor endstops (FSR)
+#fsr_enable                                  true
+#fsr_pin                                     0.25
+#fsr_endstop_limit                           3551
+#adc_count                                   100
+##pressure_report_mcode                      900
+##set_fsr_mcode                              901
+#gamma_min_endstop_type                      fsr
+#gamma_min_invert_fsr                        true
+
+

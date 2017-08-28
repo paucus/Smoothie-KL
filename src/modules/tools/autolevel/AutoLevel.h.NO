@@ -1,0 +1,46 @@
+/*
+ * AutoLevel.h
+ *
+ *  Created on: Apr 30, 2014
+ *      Author: abialet
+ */
+
+#ifndef AUTOLEVEL_H_
+#define AUTOLEVEL_H_
+
+#include "libs/Module.h"
+#include "libs/Kernel.h"
+#include "modules/tools/endstops/Endstops.h"
+#include "modules/communication/utils/Gcode.h"
+#include "libs/StepperMotor.h"
+#include "libs/Pin.h"
+#include "vector_3.h"
+#include "AutolevelPublicAccess.h"
+
+const int default_positions_to_probe[4][2] = {{10,190}, {190,190}, {190,10}};
+
+class AutoLevel : public Module{
+public:
+	AutoLevel(Endstops* endstops);
+	void on_module_loaded();
+	void on_gcode_received(void* argument);
+	void on_config_reload(void* argument);
+	void on_get_public_data(void* argument);
+
+private:
+	vector_3 make_single_autolevel_measure(float pos_x, float pos_y, int& z_steps);
+	StepperMotor* steppers[3];
+	Endstops* endstops;
+	float steps_per_mm[3];
+	float positions_to_probe[4][2] = {{0,0}, {0,0}, {0,0}};
+	void update_area_to_probe_g30();
+	float area_to_probe_g30_min[2] = {0,0};
+	float area_to_probe_g30_max[2] = {0,0};
+	float fast_move_z;
+	float slow_move_z;
+	float fast_move_xy;
+	int raise_z;
+	int autolevel_progress;
+};
+
+#endif /* AUTOLEVEL_H_ */

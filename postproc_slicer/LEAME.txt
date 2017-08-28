@@ -1,0 +1,46 @@
+Introducción
+------------
+Esta aplicación es responsable de generar los archivos de metadatos para
+impresoras 3D de Kikai Labs. Estos archivos se identifican por la extensión
+k3d y contienen datos extraídos de los archivos del modelo y el gcode.
+Esta aplicación aprovecha las características de post-procesador provistas por
+la mayoría de los slicers. Para correrlo, debe llamar a kl_postproc.bat como
+script post-procesador.
+Aunque esta aplicación ha sido testeada en ambientes Windows, debería ser
+posible usarlo en entornos *nix, como Linux o MacOSX. Sólo debe asegurarse de
+que python 2.7, PIL ("Python Imaging Library",
+http://www.pythonware.com/products/pil/) y vtk ("The Visualization Toolkit",
+http://www.vtk.org/) estén instalados.
+
+Cómo usarlo
+-----------
+Para usar el script, debe establecer a "kl_postproc.bat" como script post-
+procesador en su aplicación slicer. No cualquier slicer tiene soporte para
+post-procesadores, y no todos funcionan bien. La condición necesaria es que
+entreguen el path absoluto final al archivo gcode. Hasta ahora, dos slicers
+donde ha sido probado que funciona son Slic3r (http://slic3r.org/) y Simplify3D
+(https://www.simplify3d.com/). Cura soporta plug-ins post-procesadores, pero no
+provee el path final de destino al script, sino que entrega uno temporal.
+La segunda condición es que el usuario debe guardar el gcode resultado en el
+mismo path donde se encuentra el archivo stl del modelo, manteniendo el mismo
+nombre, pero cambiando la extensión a ".gcode". La razón detrás de esto es para
+localizar el archivo stl original. El archivo original del modelo es necesario
+para extraer parte de los datos y generar el preview del archivo.
+
+Slic3r
+------
+En este caso es suficiente con establecer el path absoluto al archivo bat para
+hacerlo funcionar. Por ejemplo, puede establecer a través de la interfaz de
+usuario:
+C:\Program Files\KikaiLabs\SlicerPostProc\kl_postproc.bat
+o a través del archivo de configuración:
+post_process = C:\Program Files\KikaiLabs\SlicerPostProc\kl_postproc.bat
+Si decide instalar el postprocesador en otro directorio, modifique la ruta al
+valor que corresponda.
+
+Simplify3D
+----------
+En este caso debe hacerlo a través de la interfaz de usuario. Establecer:
+C:\Program Files\KikaiLabs\SlicerPostProc\kl_postproc.bat [output_filepath]
+Si decide instalar el postprocesador en otro directorio, modifique la ruta al
+valor que corresponda.

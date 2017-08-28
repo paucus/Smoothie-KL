@@ -1,0 +1,8 @@
+printing_area_boundary_max_z                 300
+
+extruder.hotend.steps_per_mm                 630
+
+delta_current                                1.00
+
+temperature_control.hotend.beta              4210
+temperature_control.hotend.thermistor        EPCOS100K

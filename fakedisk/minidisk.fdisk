@@ -1,0 +1,7 @@
+# partition table of /tmp/minidisk.bin
+unit: sectors
+
+/tmp/minidisk.bin1 : start=       45, size=     2835, Id= c, bootable
+/tmp/minidisk.bin2 : start=        0, size=        0, Id= 0
+/tmp/minidisk.bin3 : start=        0, size=        0, Id= 0
+/tmp/minidisk.bin4 : start=        0, size=        0, Id= 0

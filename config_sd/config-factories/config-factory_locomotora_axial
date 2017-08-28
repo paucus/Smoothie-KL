@@ -1,0 +1,5 @@
+printing_area_boundary_max_z                 300
+
+extruder.hotend.steps_per_mm                 630
+
+delta_current                                1.00
